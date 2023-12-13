@@ -2,7 +2,6 @@ package com.sahaplus.baascore.bankone_apis.modules.account.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.backbone.AccountsByCustomerIdResponseDto;
-import com.sahaplus.baascore.bankone_apis.modules.customer.dto.response.CustomerDetailsResponse;
 import com.sahaplus.baascore.bankone_apis.util.BaseResponse;
 import lombok.*;
 

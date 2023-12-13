@@ -222,7 +222,7 @@ public class BankOneCustomerService {
             String version) {
         log.info("IS_CUSTOMER_EXIST_BY_EMAIL_REQUEST: {}", customerEmail);
 
-        String apiUrl = baseUrl + "/api/Customer/IsCustomerExistByEmail/2" + "?authtoken=" + authToken +  "&email=" + customerEmail;
+        String apiUrl = baseUrl + "/api/Customer/IsCustomerExistByEmail/2" + "?authtoken=" + authToken + "&email=" + customerEmail;
 
         var apiResponse = httpClient.callApi(null, Boolean.class, HttpMethod.GET,
                 apiUrl);
@@ -237,7 +237,7 @@ public class BankOneCustomerService {
             String version) {
         log.info("IS_CUSTOMER_EXIST_BY_PHONE_NO_REQUEST: {}", customerPhoneNo);
 
-        String apiUrl = baseUrl + "/api/Customer/IsCustomerExistByPhoneNo/2" + "?authtoken=" + authToken +  "&phoneNumber=" + customerPhoneNo;
+        String apiUrl = baseUrl + "/api/Customer/IsCustomerExistByPhoneNo/2" + "?authtoken=" + authToken + "&phoneNumber=" + customerPhoneNo;
 
         var apiResponse = httpClient.callApi(null, Boolean.class, HttpMethod.GET,
                 apiUrl);

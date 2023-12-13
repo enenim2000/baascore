@@ -7,16 +7,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface KYCRepository extends JpaRepository<KYCDetails, Long> {
 
-//    Optional<KYCDetails> findByFileNameAndUser(String fileName, User user);
+    List<KYCDetails> findByUser(User user);
+
+    KYCDetails findByKey(String key);
+
+    //    Optional<KYCDetails> findByFileNameAndUser(String fileName, User user);
 //
-//    List<KYCDetails> findByDocumentType(DocumentType documentType);
-//
-//    Optional<KYCDetails> findByLoginIdAndDocumentType(long userId, DocumentType documentType);
+    List<KYCDetails> findByDocumentType(DocumentType documentType);
+
+    //
+    List<KYCDetails> findByUserAndDocumentType(User user, DocumentType documentType);
 //
 //    List<KYCDetails> findByLoginId(long userId);
 }

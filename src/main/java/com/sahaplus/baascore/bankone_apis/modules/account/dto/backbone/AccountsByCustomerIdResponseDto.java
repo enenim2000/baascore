@@ -1,8 +1,6 @@
 package com.sahaplus.baascore.bankone_apis.modules.account.dto.backbone;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sahaplus.baascore.bankone_apis.modules.customer.dto.backbone.CustomerDetailsResponseDto;
-import com.sahaplus.baascore.bankone_apis.modules.customer.dto.response.CustomerDetailsResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;

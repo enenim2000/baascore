@@ -134,7 +134,6 @@ public class CustomerDetailsResponseDto {
     private List<String> TheDirectors;
 
 
-
     @Getter
     @Setter
     @Builder

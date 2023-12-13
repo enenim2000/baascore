@@ -8,11 +8,11 @@ import lombok.Setter;
 @Setter
 public class BaseResponse {
 
-  private String responseCode;
-  private String responseMessage;
+    private String responseCode;
+    private String responseMessage;
 
-  public BaseResponse() {
-    this.responseCode = ResponseCodes.SUCCESSFUL.getValue();
-    this.responseMessage = "Successful";
-  }
+    public BaseResponse() {
+        this.responseCode = ResponseCodes.SUCCESSFUL.getValue();
+        this.responseMessage = "Successful";
+    }
 }

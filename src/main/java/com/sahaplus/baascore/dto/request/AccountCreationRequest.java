@@ -33,5 +33,5 @@ public class AccountCreationRequest {
     private String nationalIdentityNo;
     private String accountOfficerCode;
     private String bvnToken;
-    private long loginId;
+    private String loginId;
 }

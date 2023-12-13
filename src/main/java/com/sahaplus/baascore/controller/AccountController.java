@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +42,7 @@ public class AccountController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = OnboardExistingCustomerResponse.class))})})
     @GetMapping("/onboardExistingCustomers")
-    public OnboardExistingCustomerResponse onboardExistingCustomers(@RequestParam("accountNumber") String accountNumber, @RequestParam("loginId") long loginId) {
+    public OnboardExistingCustomerResponse onboardExistingCustomers(@RequestParam("accountNumber") String accountNumber, @RequestParam("loginId") String loginId) {
         return accountService.onBoardingExistingCustomers(accountNumber, loginId);
     }
 

@@ -37,7 +37,6 @@ public class Account extends BaseClass {
     private boolean PNDStatus;
     private String accountTier;
 
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ToString.Exclude

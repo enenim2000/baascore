@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class UpdateCustomerResponse extends BaseResponse {
     private Data data;
+
     public UpdateCustomerResponse() {
         super();
     }

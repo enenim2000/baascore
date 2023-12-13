@@ -106,9 +106,9 @@ public class BVNValidator {
         }
     }
 
-    public BVNDetails getBvnDetails (String token) {
+    public BVNDetails getBvnDetails(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("x-consumer-unique-id",chanelCode+userId);
+        headers.set("x-consumer-unique-id", chanelCode + userId);
         headers.set("x-consumer-custom-id", clientId);
         headers.setBearerAuth(token);
 

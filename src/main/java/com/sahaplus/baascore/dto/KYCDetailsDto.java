@@ -10,9 +10,19 @@ import lombok.*;
 @ToString
 @Builder
 public class KYCDetailsDto {
-    private String fileName;
+    private String key;
+
+    private String fileExtension;
 
     private DocumentType documentType;
 
-    private String filePath;
+    private String s3FileHash;
+
+    private String s3Etag;
+
+    private String s3ObjectUrl;
+
+    private boolean isDeleted = false;
+
+    private Long userId;
 }

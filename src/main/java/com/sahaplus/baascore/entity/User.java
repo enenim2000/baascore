@@ -1,6 +1,7 @@
 package com.sahaplus.baascore.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sahaplus.baascore.bankone_apis.enums.CustomerType;
 import com.sahaplus.baascore.bankone_apis.enums.Gender;
 import jakarta.persistence.*;
@@ -17,22 +18,23 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "saha_plus_user")
 public class User extends BaseClass {
     @NotNull
-    private long loginId;
+    private String loginId;
 
     private String bankOneId;
 
     private String bankOneCustomerId;
 
-//    @NotNull
+    //    @NotNull
     private String firstName;
 
     private String otherNames;
 
-//    @NotNull
+    //    @NotNull
     private String lastName;
 
     @Email
@@ -40,7 +42,7 @@ public class User extends BaseClass {
     @Column(unique = true)
     private String email;
 
-//    @NotNull
+    //    @NotNull
     private String mobile_phone;
 
     @Enumerated(EnumType.STRING)
@@ -50,7 +52,7 @@ public class User extends BaseClass {
     private String address;
     private CustomerType customerType;
 
-//    @Size(min = 6, max = 6)
+    //    @Size(min = 6, max = 6)
     private int pin;
     private String nin;
 
@@ -72,9 +74,6 @@ public class User extends BaseClass {
     @OneToMany(mappedBy = "accountOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Account> accounts;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<KYCDetails> kycDetails;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude

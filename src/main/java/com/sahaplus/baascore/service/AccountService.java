@@ -16,7 +16,7 @@ public interface AccountService {
 
 //    OnboardExistingCustomerResponse onBoardingExistingCustomers(String accountNumber, String userId);
 
-    OnboardExistingCustomerResponse onBoardingExistingCustomers(String accountNumber, long loginId);
+    OnboardExistingCustomerResponse onBoardingExistingCustomers(String accountNumber, String loginId);
 
     AccountByAccountNumberResponse getAccountByAccountNumber(String accountNumber);
 

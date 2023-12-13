@@ -1,14 +1,11 @@
 package com.sahaplus.baascore.bankone_apis.modules.account;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.backbone.*;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.AddAccountToCustomerRequest;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.CreateAccountRequest;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.CreateSavingsAccountRequest;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.UpdateAccountTierRequest;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.*;
-import com.sahaplus.baascore.bankone_apis.modules.customer.dto.backbone.CustomerDetailsResponseDto;
-import com.sahaplus.baascore.bankone_apis.modules.customer.dto.response.CustomerDetailsResponse;
 import com.sahaplus.baascore.bankone_apis.util.HttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

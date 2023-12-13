@@ -1,19 +1,19 @@
 package com.sahaplus.baascore.service.impl;
 
-import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.AccountByAccountNumberResponse;
-import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.AccountsByCustomerIdResponse;
-import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.OutstandingBalanceResponse;
-import com.sahaplus.baascore.dto.request.AccountCreationRequest;
-import com.sahaplus.baascore.dto.request.OnboardExistingCustomerResponse;
-import com.sahaplus.baascore.dto.response.AccountCreationResponse;
 import com.sahaplus.baascore.bankone_apis.enums.CustomerType;
 import com.sahaplus.baascore.bankone_apis.modules.account.BankOneAccountService;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.CreateAccountRequest;
+import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.AccountByAccountNumberResponse;
+import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.AccountsByCustomerIdResponse;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.CreateAccountResponse;
+import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.OutstandingBalanceResponse;
 import com.sahaplus.baascore.bankone_apis.modules.customer.BankOneCustomerService;
 import com.sahaplus.baascore.bankone_apis.modules.customer.dto.request.CreateCustomerRequest;
 import com.sahaplus.baascore.bankone_apis.modules.customer.dto.response.CreateCustomerResponse;
 import com.sahaplus.baascore.bankone_apis.modules.customer.dto.response.CustomerDetailsResponse;
+import com.sahaplus.baascore.dto.request.AccountCreationRequest;
+import com.sahaplus.baascore.dto.request.OnboardExistingCustomerResponse;
+import com.sahaplus.baascore.dto.response.AccountCreationResponse;
 import com.sahaplus.baascore.entity.Account;
 import com.sahaplus.baascore.entity.User;
 import com.sahaplus.baascore.exception.ApiException;
@@ -194,7 +194,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public OnboardExistingCustomerResponse onBoardingExistingCustomers(String accountNumber, long loginId) {
+    public OnboardExistingCustomerResponse onBoardingExistingCustomers(String accountNumber, String loginId) {
         log.info("AccountCreationRequest: {}", accountNumber);
 
         if (StringUtils.isAnyBlank(accountNumber)) {

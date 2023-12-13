@@ -4,8 +4,6 @@ import com.sahaplus.baascore.enums.DocumentType;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,15 +13,22 @@ import java.util.List;
 @Entity()
 public class KYCDetails extends BaseClass {
 
-    private String fileName;
+    private String key;
 
     private String fileExtension;
 
+    @Enumerated(value = EnumType.STRING)
     private DocumentType documentType;
 
     private String s3FileHash;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private String s3Etag;
+
+    private String s3ObjectUrl;
+
+    private boolean isDeleted = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ToString.Exclude
     private User user;
