@@ -21,7 +21,7 @@ public class UpdateUserDto {
     private String otherNames;
     private String lastName;
     private String mobile_phone;
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
     private String address;
     private CustomerType customerType;
     private int pin;

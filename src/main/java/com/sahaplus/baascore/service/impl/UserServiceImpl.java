@@ -35,8 +35,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ApiException("User Not Found"));
 
         dbUser.setKYCVerified(updateUserDto.isKYCVerified());
-        dbUser.setDeleted(updateUserDto.isDeleted());
-        dbUser.setBlocked(updateUserDto.isBlocked());
+
         dbUser.setNin(updateUserDto.getNin());
         dbUser.setPin(updateUserDto.getPin());
         dbUser.setFirstName(updateUserDto.getFirstName());
@@ -45,12 +44,8 @@ public class UserServiceImpl implements UserService {
         dbUser.setDateOfBirth(updateUserDto.getDateOfBirth());
         dbUser.setAddress(updateUserDto.getAddress());
         dbUser.setCustomerType(updateUserDto.getCustomerType());
-        dbUser.setEmailVerified(updateUserDto.isEmailVerified());
-        dbUser.setPhoneVerified(updateUserDto.isPhoneVerified());
         dbUser.setProfileComplete(updateUserDto.isProfileComplete());
         dbUser.setBvnVerified(updateUserDto.isBvnVerified());
-        dbUser.setBlocked(updateUserDto.isBlocked());
-        dbUser.setDeleted(updateUserDto.isDeleted());
         dbUser.setPinSet(updateUserDto.isPinSet());
         dbUser.setPinBlocked(updateUserDto.isPinBlocked());
 
