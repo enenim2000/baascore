@@ -2,7 +2,11 @@ package com.sahaplus.baascore.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.sahaplus.baascore.auth.RequestUtil;
+import com.sahaplus.baascore.bankone_apis.enums.Gender;
+import com.sahaplus.baascore.entity.User;
 import com.sahaplus.baascore.exception.ApiException;
+import com.sahaplus.baascore.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -22,6 +26,8 @@ import org.springframework.web.client.RestTemplate;
 public class BVNValidator {
 
     public RestTemplate restTemplate = new RestTemplate();
+
+    private final UserRepository userRepository;
 
     @Value("${nibss.clientId}")
     private String clientId;
@@ -52,6 +58,10 @@ public class BVNValidator {
 
     @Value("${nibss.tokenUrl}")
     private String tokenUrl;
+
+    public BVNValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/authorize")
     public ResponseEntity<String> authorize() {
@@ -121,9 +131,27 @@ public class BVNValidator {
     }
 
     public boolean validateBvn(String token, String nin) {
+        User dbUser = userRepository.findByLoginId(RequestUtil.getAuthToken().getUuid()).orElse(null);
+
+        if (dbUser != null && dbUser.isBvnVerified()) {
+            throw new ApiException("User bvn already validated");
+        }
+
         log.info("Verifying BVN: {}", nin);
         BVNDetails bvnDetails = getBvnDetails(token);
         log.info("BVN Details: {}", bvnDetails);
+
+        User newUser = User.builder()
+                .loginId(RequestUtil.getAuthToken().getUuid())
+                .isBvnVerified(true)
+                .firstName(bvnDetails.getFirstName())
+                .otherNames(bvnDetails.getMiddleName())
+                .lastName(bvnDetails.getSurname())
+                .gender(bvnDetails.getGender().equalsIgnoreCase("male") ? Gender.MALE : Gender.FEMALE)
+                .nin(bvnDetails.getNin())
+                .dateOfBirth(bvnDetails.getDateOfBirth())
+                .build();
+        userRepository.save(newUser);
         return bvnDetails.getNin().equals(nin);
     }
 }

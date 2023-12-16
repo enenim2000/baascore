@@ -1,9 +1,11 @@
 package com.sahaplus.baascore.controller;
 
+import com.sahaplus.baascore.auth.Permission;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.AccountByAccountNumberResponse;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.AccountsByCustomerIdResponse;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.OutstandingBalanceResponse;
 import com.sahaplus.baascore.dto.request.AccountCreationRequest;
+import com.sahaplus.baascore.dto.request.OnboardExistingCustomerRequest;
 import com.sahaplus.baascore.dto.request.OnboardExistingCustomerResponse;
 import com.sahaplus.baascore.dto.response.AccountCreationResponse;
 import com.sahaplus.baascore.service.AccountService;
@@ -26,6 +28,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @Permission("CREATE_NEW_CUSTOMER")
     @Operation(summary = "Create Customer And Wallet For New Customer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Create Customer And Wallet For New Customer",
@@ -42,8 +45,8 @@ public class AccountController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = OnboardExistingCustomerResponse.class))})})
     @GetMapping("/onboardExistingCustomers")
-    public OnboardExistingCustomerResponse onboardExistingCustomers(@RequestParam("accountNumber") String accountNumber, @RequestParam("loginId") String loginId) {
-        return accountService.onBoardingExistingCustomers(accountNumber, loginId);
+    public OnboardExistingCustomerResponse onboardExistingCustomers(@RequestBody OnboardExistingCustomerRequest onboardExistingCustomerRequest) {
+        return accountService.onBoardingExistingCustomers(onboardExistingCustomerRequest);
     }
 
     @Operation(summary = "Get Account By Account Number")

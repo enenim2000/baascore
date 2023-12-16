@@ -15,4 +15,13 @@ public class ApiExceptionHandler {
         errorResponse.setHttpStatus(badRequest);
         return new ResponseEntity<>(errorResponse, badRequest);
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handlerUnauthorizedException(final ApiException e) {
+        HttpStatus unauthorized = HttpStatus.UNAUTHORIZED;
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(e.getMessage());
+        errorResponse.setHttpStatus(unauthorized);
+        return new ResponseEntity<>(errorResponse, unauthorized);
+    }
 }

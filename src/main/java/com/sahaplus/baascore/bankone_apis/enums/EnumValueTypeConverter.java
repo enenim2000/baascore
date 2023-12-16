@@ -6,7 +6,7 @@ import jakarta.persistence.AttributeConverter;
 public abstract class EnumValueTypeConverter<T extends Enum<T> & PersistableEnum<E>, E> implements AttributeConverter<T, E> {
     private final Class<T> clazz;
 
-    EnumValueTypeConverter(Class<T> clazz) {
+    protected EnumValueTypeConverter(Class<T> clazz) {
         this.clazz = clazz;
     }
 

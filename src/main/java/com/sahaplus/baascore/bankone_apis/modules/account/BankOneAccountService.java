@@ -1,10 +1,7 @@
 package com.sahaplus.baascore.bankone_apis.modules.account;
 
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.backbone.*;
-import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.AddAccountToCustomerRequest;
-import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.CreateAccountRequest;
-import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.CreateSavingsAccountRequest;
-import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.UpdateAccountTierRequest;
+import com.sahaplus.baascore.bankone_apis.modules.account.dto.request.*;
 import com.sahaplus.baascore.bankone_apis.modules.account.dto.response.*;
 import com.sahaplus.baascore.bankone_apis.util.HttpClient;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +17,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class BankOneAccountService {
+
+    @Value("${bankone.thirdPartyBaseUrl}")
+    private String thirdPartyBaseUrl;
     @Value("${bankone.baseurl}")
     private String baseUrl;
 
@@ -302,4 +302,19 @@ public class BankOneAccountService {
 
         return apiResponse;
     }
+
+    public AccountEnquiryResponse doAccountEnquiry(AccountEnquiryRequest request) {
+        log.info("BankOne-AccountEnquiryRequest: {}", request);
+
+        String apiUrl = thirdPartyBaseUrl + "/Account/AccountEnquiry";
+
+        var apiResponse = httpClient.callApi(request, AccountEnquiryResponse.class, HttpMethod.POST,
+                apiUrl);
+
+        log.info("BankOne-AccountEnquiryRequest: {}", apiResponse);
+
+        return apiResponse;
+    }
+
+
 }

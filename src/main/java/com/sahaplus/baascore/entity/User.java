@@ -48,7 +48,7 @@ public class User extends BaseClass {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    private LocalDateTime dateOfBirth;
+    private String dateOfBirth;
     private String address;
     private CustomerType customerType;
 
@@ -56,13 +56,11 @@ public class User extends BaseClass {
     private int pin;
     private String nin;
 
-    private boolean isEmailVerified = false;
-    private boolean isPhoneVerified = false;
     private boolean isProfileComplete = false;
     private boolean isBvnVerified = false;
     private boolean isKYCVerified = false;
-    private boolean isBlocked = false;
-    private boolean isDeleted = false;
+//    private boolean isBlocked = false;
+//    private boolean isDeleted = false;
     private int loginAttempts = 0;
     private LocalDateTime lastLogin;
     private int pinAttempts = 0;
