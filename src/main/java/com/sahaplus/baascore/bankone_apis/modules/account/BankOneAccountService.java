@@ -118,8 +118,8 @@ public class BankOneAccountService {
         AccountByAccountNumberResponse.Data data = new AccountByAccountNumberResponse.Data();
         data.setAvailableBalance(apiResponse.getAvailableBalance());
         data.setWithdrawableBalance(apiResponse.getWithdrawableBalance());
-        data.setNuban(apiResponse.getNuban());
-        data.setAccountTier(apiResponse.getAccountTier());
+        data.setLedgerBalance(apiResponse.getLedgerBalance());
+        data.setAccountType(apiResponse.getAccountType());
 
         var response = new AccountByAccountNumberResponse();
         response.setData(data);

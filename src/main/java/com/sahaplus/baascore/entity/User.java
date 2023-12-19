@@ -29,12 +29,10 @@ public class User extends BaseClass {
 
     private String bankOneCustomerId;
 
-    //    @NotNull
     private String firstName;
 
     private String otherNames;
 
-    //    @NotNull
     private String lastName;
 
     @Email
@@ -42,25 +40,27 @@ public class User extends BaseClass {
     @Column(unique = true)
     private String email;
 
-    //    @NotNull
     private String mobile_phone;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private String dateOfBirth;
+    private String placeOfBirth;
+    private String streetNo;
+    private String StreetName;
+    private String city;
+    private String state;
+    private String country;
     private String address;
     private CustomerType customerType;
 
-    //    @Size(min = 6, max = 6)
     private int pin;
     private String nin;
 
     private boolean isProfileComplete = false;
     private boolean isBvnVerified = false;
     private boolean isKYCVerified = false;
-//    private boolean isBlocked = false;
-//    private boolean isDeleted = false;
     private int loginAttempts = 0;
     private LocalDateTime lastLogin;
     private int pinAttempts = 0;

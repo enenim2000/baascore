@@ -2,6 +2,8 @@ package com.sahaplus.baascore.dto.response;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,15 +12,9 @@ import lombok.*;
 public class AccountCreationResponse {
     private String transactionTrackingRef;
     private String accountNumber;
-    private String accountStatus;
-    private String accountType;
-    private String availableBalance;
-    private String withdrawableBalance;
+
     private String customerID;
     private String customerName;
-    private String dateCreated;
-    private String nuban;
+    private String dateCreated = LocalDateTime.now().toString();
     private boolean pndStatus;
-    private String accountTier;
-    private String accountAccess;
 }

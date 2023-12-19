@@ -1,21 +1,23 @@
 package com.sahaplus.baascore.auth;
 
 import com.google.gson.Gson;
+import com.sahaplus.baascore.bankone_apis.util.BaseResponse;
 import com.sahaplus.baascore.exception.ApiException;
 import com.sahaplus.baascore.exception.UnauthorizedException;
 import com.sahaplus.baascore.util.HashUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -26,6 +28,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private String authServerClientId;
 
     private String serviceName;
+
+
+    private String sahaCompanyClientId;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -62,6 +67,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         log.info("AuthenticationInterceptor::afterCompletion()");
     }
 
+    public void setSahaCompanyClientId(String sahaCompanyClientId) {
+        this.sahaCompanyClientId = sahaCompanyClientId;
+    }
+
     private boolean isSecuredRoute(HandlerMethod handlerMethod) {
         return handlerMethod.getMethod().isAnnotationPresent(
             Permission.class);
@@ -79,31 +88,46 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         this.authServerBaseUrl = authServerBaseUrl;
     }
 
-    private boolean isPermitted(String forwardedToken, String permission) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders header = new HttpHeaders();
-
-        //Hash SHA 256 of appName,http method,uri e.g user-service,GET,/api/user/logout
+    private boolean isPermitted(String token, String permission) {
         String permissionId = HashUtil.getHash(serviceName + permission);
 
-        header.add("x-auth-client-id", authServerClientId); //Service/App client id
-        header.add("x-auth-client-token", forwardedToken); //Token forwarded by API Gateway or frontend client
-        header.add("x-auth-permission-id", permissionId);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(null, header);
+        Map<String, String> request = new HashMap<>();
+        request.put("serviceClientId", authServerClientId);
+        request.put("token", token);
+        request.put("permissionId", permissionId);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("client-id", sahaCompanyClientId);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(request, headers);
+        log.info("Request: {}", new Gson().toJson(request));
         String oauthUrl = authServerBaseUrl + "/oauth/token/verify";
+        log.info("Url: {}", oauthUrl);
         try {
             //The endpoint on the authorization server will check to see if the service has the permissionId in the ApplicationPermission table
             ResponseEntity<String> response = restTemplate.exchange(oauthUrl, HttpMethod.POST, httpEntity, String.class);
+            log.info("Api Response: {}", response);
             if (response.getStatusCode().is2xxSuccessful()) {
                 AuthToken newToken = new Gson().fromJson(response.getBody(), AuthToken.class);
                 RequestUtil.setAuthToken(newToken);
                 return true;
             }
+
+        } catch (HttpClientErrorException e) {
+            log.error("Unable to verify token server url: {}", oauthUrl);
+            log.error("Exception: ", e);
+            BaseResponse errorResponse = new Gson().fromJson(e.getResponseBodyAsString(), BaseResponse.class);
+            throw new ApiException(errorResponse.getResponseMessage());
+
         } catch (Exception e) {
             log.error("Unable to verify token server url: {}", oauthUrl);
+            log.error("Exception: ", e);
+            throw new ApiException("System Malfunction");
         }
-
         return false;
     }
 }

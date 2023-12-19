@@ -63,16 +63,20 @@ public class BVNValidator {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/authorize")
     public ResponseEntity<String> authorize() {
         String authorizationUrl = buildAuthorizationUrl();
         return ResponseEntity.ok(authorizationUrl);
     }
 
     @PostMapping("/exchange-code")
-    public ResponseEntity<String> exchangeCode(@RequestParam String code) {
-        String accessToken = exchangeCodeForAccessToken(code);
-        return ResponseEntity.ok("Access Token: " + accessToken);
+    public ResponseEntity<String> doAfterCallback(String tempCode) {
+        log.info("Code {}", tempCode);
+
+        String accessToken = exchangeCodeForAccessToken(tempCode);
+        log.info("Access Token {}", accessToken);
+
+        validateBvn(accessToken);
+        return ResponseEntity.ok("BVN validated successfully");
     }
 
     private String buildAuthorizationUrl() {
@@ -116,7 +120,7 @@ public class BVNValidator {
         }
     }
 
-    public BVNDetails getBvnDetails(String token) {
+    private BVNDetails getBvnDetails(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-consumer-unique-id", chanelCode + userId);
         headers.set("x-consumer-custom-id", clientId);
@@ -130,15 +134,15 @@ public class BVNValidator {
         return response.getBody();
     }
 
-    public boolean validateBvn(String token, String nin) {
+    private void validateBvn(String token) {
         User dbUser = userRepository.findByLoginId(RequestUtil.getAuthToken().getUuid()).orElse(null);
 
         if (dbUser != null && dbUser.isBvnVerified()) {
             throw new ApiException("User bvn already validated");
         }
 
-        log.info("Verifying BVN: {}", nin);
-        BVNDetails bvnDetails = getBvnDetails(token);
+        try {
+            BVNDetails bvnDetails = getBvnDetails(token);
         log.info("BVN Details: {}", bvnDetails);
 
         User newUser = User.builder()
@@ -152,7 +156,9 @@ public class BVNValidator {
                 .dateOfBirth(bvnDetails.getDateOfBirth())
                 .build();
         userRepository.save(newUser);
-        return bvnDetails.getNin().equals(nin);
+    } catch (Exception e) {
+            throw new ApiException(e.getMessage());
+        }
     }
 }
 

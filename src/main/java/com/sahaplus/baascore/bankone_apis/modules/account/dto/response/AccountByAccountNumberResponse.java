@@ -24,13 +24,9 @@ public class AccountByAccountNumberResponse extends BaseResponse {
     @ToString
     @AllArgsConstructor
     public static class Data {
-        @JsonProperty("AvailableBalance")
         private String availableBalance;
-        @JsonProperty("WithdrawableBalance")
         private String withdrawableBalance;
-        @JsonProperty("NUBAN")
-        private String nuban;
-        @JsonProperty("AccountTier")
-        private String accountTier;
+        private String ledgerBalance;
+        private String accountType;
     }
 }

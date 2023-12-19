@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
+//@Table(name = "Saha_Plus_Account")
 @Entity
 public class Account extends BaseClass {
     @Column(unique = true)

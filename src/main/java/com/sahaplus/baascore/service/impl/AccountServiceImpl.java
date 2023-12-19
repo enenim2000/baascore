@@ -20,6 +20,7 @@ import com.sahaplus.baascore.entity.Account;
 import com.sahaplus.baascore.entity.User;
 import com.sahaplus.baascore.enums.AccountTier;
 import com.sahaplus.baascore.exception.ApiException;
+import com.sahaplus.baascore.exception.NotFoundException;
 import com.sahaplus.baascore.repository.AccountRepository;
 import com.sahaplus.baascore.repository.UserRepository;
 import com.sahaplus.baascore.service.AccountService;
@@ -59,15 +60,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public AccountCreationResponse accountOpeningForNewCustomersIndividual(AccountCreationRequest accountOpeningRequest) throws InvocationTargetException, IllegalAccessException {
+    public AccountCreationResponse accountOpeningForNewCustomersIndividual(
+            AccountCreationRequest accountOpeningRequest
+    )
+            throws InvocationTargetException, IllegalAccessException {
         log.info("AccountCreationRequest: {}", accountOpeningRequest);
 
-        if (!RequestUtil.getAuthToken().isEmailVerified()) {
-            throw new ApiException("Customer email is not verified");
-        }
-        if (!RequestUtil.getAuthToken().isPhoneVerified()) {
-            throw new ApiException("Customer phone number is not verified");
-        }
+//        if (!RequestUtil.getAuthToken().isEmailVerified()) {
+//            throw new ApiException("Customer email is not verified");
+//        }
+//        if (!RequestUtil.getAuthToken().isPhoneVerified()) {
+//            throw new ApiException("Customer phone number is not verified");
+//        }
 //        if (user.isBlocked()) {
 //            throw new ApiException("Customer account is blocked");
 //        }
@@ -76,17 +80,17 @@ public class AccountServiceImpl implements AccountService {
 //        }
         log.trace("Initial Validations passed");
 
-        boolean verified = bvnValidator.validateBvn(accountOpeningRequest.getBvnToken(), accountOpeningRequest.getNationalIdentityNo());
-        if (!verified) {
-            log.error("BVN cannot verified");
-            throw new ApiException("BVN cannot verified");
+//        User dbUser = userRepository.findByLoginId(RequestUtil.getAuthToken().getUuid())
+//                .orElseThrow(() -> new NotFoundException("User Not Found"));
+        User dbUser = userRepository.findByLoginId(accountOpeningRequest.getLoginId())
+                .orElseThrow(() -> new NotFoundException("User Not Found"));
+        log.info("DB user {}", dbUser);
+
+        if (!dbUser.isBvnVerified()) {
+            throw new ApiException("Customers Bvn is not verified");
         }
-        log.trace("BVN successfully verified");
 
-        User dbUser = userRepository.findByLoginId(RequestUtil.getAuthToken().getUuid()).orElse(null);
-        System.out.println(dbUser);
-
-        if (Objects.requireNonNull(dbUser).getBankOneCustomerId() != null) {
+        if (dbUser.getBankOneCustomerId() != null) {
             log.error("Customer profile already exists on Bank One");
             throw new ApiException("Customer profile already exists on Bank One");
         } else {
@@ -94,7 +98,8 @@ public class AccountServiceImpl implements AccountService {
             var createCustomerRequest = CreateCustomerRequest.builder()
                     .firstName(dbUser.getFirstName())
                     .gender(dbUser.getGender())
-                    .email(RequestUtil.getAuthToken().getEmail())
+//                    .email(RequestUtil.getAuthToken().getEmail())
+                    .email("ngolo.kante@gmail.com")
                     .dateOfBirth(dbUser.getDateOfBirth())
                     .bankVerificationNumber(accountOpeningRequest.getBvn())
                     .accountOfficerCode(accountOfficerCode)
@@ -104,7 +109,8 @@ public class AccountServiceImpl implements AccountService {
                     .address(accountOpeningRequest.getStreetNo() + " " + accountOpeningRequest.getStreetName()
                             + " " + accountOpeningRequest.getCity() + " " + accountOpeningRequest.getState()
                             + " " + accountOpeningRequest.getCountry())
-                    .phoneNo(RequestUtil.getAuthToken().getPhone())
+//                    .phoneNo(RequestUtil.getAuthToken().getPhone())
+                    .phoneNo("09756434356")
                     .placeOfBirth(accountOpeningRequest.getPlaceOfBirth())
                     .nationalIdentityNo(dbUser.getNin())
                     .customerType(CustomerType.Individual)
@@ -120,7 +126,7 @@ public class AccountServiceImpl implements AccountService {
                 String transTrackingRef = helperUtil.generateTrackingRef();
                 String accountOpeningTrackingRef = helperUtil.generateTrackingRef();
                 var accountCreationRequest = CreateAccountRequest.builder()
-                        .accountName(accountOpeningRequest.getFirstName() + " " + accountOpeningRequest.getLastName())
+                        .accountName(dbUser.getFirstName() + " " + dbUser.getLastName())
                         .bvn(accountOpeningRequest.getBvn())
                         .customerID(newCustomer.getData().getCustomerID())
                         .accountOfficerCode(accountOfficerCode)
@@ -149,9 +155,12 @@ public class AccountServiceImpl implements AccountService {
 
                 dbUser.setBankOneCustomerId(newCustomer.getData().getCustomerID());
                 dbUser.setBankOneId(newCustomer.getData().getCustomerID());
-                dbUser.setAddress(accountOpeningRequest.getStreetNo() + " " + accountOpeningRequest.getStreetName()
-                        + " " + accountOpeningRequest.getCity() + " " + accountOpeningRequest.getState()
-                        + " " + accountOpeningRequest.getCountry());
+                dbUser.setStreetNo(accountOpeningRequest.getStreetNo());
+                dbUser.setStreetName(accountOpeningRequest.getStreetName());
+                dbUser.setCity(accountOpeningRequest.getCity());
+                dbUser.setState(accountOpeningRequest.getState());
+                dbUser.setCountry(accountOpeningRequest.getCountry());
+                dbUser.setPlaceOfBirth(accountOpeningRequest.getPlaceOfBirth());
                 userRepository.save(dbUser);
 
                 var account = Account.builder()
@@ -183,12 +192,12 @@ public class AccountServiceImpl implements AccountService {
         log.info("Onboard Existing Customer Request: {}", onboardExistingCustomerRequest);
 
 
-        if (!RequestUtil.getAuthToken().isEmailVerified()) {
-            throw new ApiException("Customer email is not verified");
-        }
-        if (!RequestUtil.getAuthToken().isPhoneVerified()) {
-            throw new ApiException("Customer phone number is not verified");
-        }
+//        if (!RequestUtil.getAuthToken().isEmailVerified()) {
+//            throw new ApiException("Customer email is not verified");
+//        }
+//        if (!RequestUtil.getAuthToken().isPhoneVerified()) {
+//            throw new ApiException("Customer phone number is not verified");
+//        }
 //        if (user.isBlocked()) {
 //            throw new ApiException("Customer account is blocked");
 //        }
@@ -197,17 +206,17 @@ public class AccountServiceImpl implements AccountService {
 //        }
         log.trace("Initial Validations passed");
 
-        boolean verified = bvnValidator.validateBvn(onboardExistingCustomerRequest.getBvnToken(), onboardExistingCustomerRequest.getNin());
-        if (!verified) {
-            log.error("BVN cannot verified");
-            throw new ApiException("BVN cannot verified");
-        }
-        log.trace("BVN successfully verified");
-
-        User dbUser = userRepository.findByLoginId(RequestUtil.getAuthToken().getUuid()).orElse(null);
+        User dbUser = userRepository.findByLoginId(onboardExistingCustomerRequest.getLoginId())
+                .orElseThrow(() -> new NotFoundException("User Not Found"));
+//                User dbUser = userRepository.findByLoginId(RequestUtil.getAuthToken().getUuid())
+//                .orElseThrow(() -> new NotFoundException("User Not Found"));
         log.info("Db User {}", dbUser);
 
-        if (Objects.requireNonNull(dbUser).getBankOneCustomerId() != null) {
+        if (!dbUser.isBvnVerified()) {
+            throw new ApiException("Customer Bvn is not verified");
+        }
+
+        if (dbUser.getBankOneCustomerId() != null) {
             log.error("Customer is already onboard");
             throw new ApiException("Customer is already onboard");
         } else {

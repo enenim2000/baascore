@@ -10,6 +10,4 @@ import lombok.NoArgsConstructor;
 public class OnboardExistingCustomerRequest {
     private String accountNumber;
     private String loginId;
-    private String bvnToken;
-    private String nin;
 }

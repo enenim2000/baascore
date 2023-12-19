@@ -10,14 +10,8 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 public class AccountByAccountNumberResponseDto {
-    @JsonProperty("AvailableBalance")
-    private String availableBalance;
-    @JsonProperty("WithdrawableBalance")
-    private String withdrawableBalance;
-    @JsonProperty("CustomerID")
-    private String customerId;
-    @JsonProperty("NUBAN")
-    private String nuban;
-    @JsonProperty("AccountTier")
-    private String accountTier;
+    private String AvailableBalance;
+    private String LedgerBalance;
+    private String WithdrawableBalance;
+    private String AccountType;
 }
