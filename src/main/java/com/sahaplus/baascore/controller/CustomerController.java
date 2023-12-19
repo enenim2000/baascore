@@ -2,12 +2,18 @@ package com.sahaplus.baascore.controller;
 
 import com.sahaplus.baascore.service.CustomerService;
 import com.sahaplus.baascore.util.BVNValidator;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
-@RequestMapping("/customer")
+//@RequestMapping("/customer")
 public class CustomerController {
+
+    @Value("${redirect.url}")
+    private String redirectUrl;
 
     private final BVNValidator bvnValidator;
 
@@ -28,9 +34,24 @@ public class CustomerController {
         return bvnValidator.authorize();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/sahaplus")
-    public ResponseEntity<String> validateBvn ( @RequestParam (name = "action") String action, @RequestParam(name = "code") String code) {
-       return bvnValidator.doAfterCallback(code);
+    @RequestMapping(method = RequestMethod.GET, value = "/saha/jp.do")
+    public RedirectView validateBvn (HttpServletRequest request) {
+        System.out.println("I got here");
+        System.out.println(request.getParameter("action"));
+        System.out.println(request.getParameter("code"));
+        String code = request.getParameter("code");
+
+        new Thread(() -> {
+            bvnValidator.doAfterCallback(code);
+        }).start();
+
+        String url = redirectUrl + "?code=" + code;
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(url);
+        return redirectView;
+
+
     }
 
 

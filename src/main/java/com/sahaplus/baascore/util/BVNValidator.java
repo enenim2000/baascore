@@ -68,7 +68,6 @@ public class BVNValidator {
         return ResponseEntity.ok(authorizationUrl);
     }
 
-    @PostMapping("/exchange-code")
     public ResponseEntity<String> doAfterCallback(String tempCode) {
         log.info("Code {}", tempCode);
 
